@@ -1,0 +1,7 @@
+To run, first compile with javac *.java
+
+Requires I believe java 13 or above to run
+
+Run with java -classpath Server MatrixClient
+
+You can also run some of my more basic test cases: SampleClient or GCFClient
