@@ -1,9 +1,11 @@
 
+import java.util.ArrayList;
+
 public class SumThread extends DockerThread {
 
-    DockerList<DockerInteger> listToSum;
-
-    public SumThread(DockerList<DockerInteger> a) {
+    
+    ArrayList<Integer> listToSum;
+    public SumThread(ArrayList<Integer> a) {
         listToSum = a;
     }
 
@@ -12,10 +14,10 @@ public class SumThread extends DockerThread {
     @Override
     public void execute() {
 
-        for (DockerInteger i : listToSum) {
-            sum += i.getValue();
+        for (int i : listToSum) {
+            sum += i;
         }
-        this.result = new DockerInteger(sum);
+        this.result = new Integer(sum);
     }
 
 

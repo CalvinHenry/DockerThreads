@@ -56,8 +56,8 @@ public class DockerThread extends Thread implements Serializable {
             this.sleep(100);
             HttpRequest request = HttpRequest.newBuilder()
                     //.uri(URI.create("http://localhost:8080"))
-                    //.uri(URI.create(myService))
-                    .uri(URI.create("https://instance-version-fuuw52yj3a-uc.a.run.app"))
+                    .uri(URI.create(myService))
+                    //.uri(URI.create("https://instance-version-fuuw52yj3a-uc.a.run.app"))
                     .POST(HttpRequest.BodyPublishers.ofString(this.serialize()))
                     .build();
 

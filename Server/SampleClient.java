@@ -21,10 +21,9 @@ public class SampleClient {
             long overheadSum = 0;
             for (int j = 0; j < 10; j ++) {
                 
-                DockerList<DockerInteger> list = new DockerList<DockerInteger>();
-        
+                ArrayList<Integer> list = new ArrayList<>();
                 for (int i = 0; i < 100; i ++) {
-                    list.add(new DockerInteger(i));
+                    list.add(i);
                 }
 
                 SumThread sumInstance = new SumThread(list);
