@@ -10,6 +10,20 @@ public class MatMultiplyThread extends DockerThread {
     int n;
     Integer[][] summation;
     int listSize;
+    public MatMultiplyThread(DockerList<DockerMatrix> a, DockerList<DockerMatrix> b, int listSize, String url) {
+        super(url);
+        aCol = a;
+        bRow = b;
+        n = a.get(0).size();
+        this.listSize = listSize;
+        summation = new Integer[n][n];
+        for (int i = 0; i < n; i ++) {
+            for (int j = 0; j < n; j ++) {
+                summation[i][j] = 0;
+            }
+        }
+    }
+
     public MatMultiplyThread(DockerList<DockerMatrix> a, DockerList<DockerMatrix> b, int listSize) {
         aCol = a;
         bRow = b;

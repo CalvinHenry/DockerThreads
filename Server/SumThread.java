@@ -17,7 +17,7 @@ public class SumThread extends DockerThread {
         for (int i : listToSum) {
             sum += i;
         }
-        this.result = new Integer(sum);
+        this.result = new DockerInteger(sum);
     }
 
 

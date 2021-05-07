@@ -11,8 +11,9 @@ import java.io.*;
 import java.util.stream.*;
 
 public class MatrixClient {
+    static String [] services = {"https://matrix-1-fuuw52yj3a-uc.a.run.app", "https://matrix-2-fuuw52yj3a-uc.a.run.app", "https://matrix-3-fuuw52yj3a-uc.a.run.app", "https://matrix-5-fuuw52yj3a-uc.a.run.app", "https://matrix-4-fuuw52yj3a-uc.a.run.app", "https://matrix-6-fuuw52yj3a-uc.a.run.app", "https://matrix-7-fuuw52yj3a-uc.a.run.app", "https://matrix-8-fuuw52yj3a-uc.a.run.app", "https://matrix-9-fuuw52yj3a-uc.a.run.app", "https://matrix-10-fuuw52yj3a-uc.a.run.app", "https://matrix-11-fuuw52yj3a-uc.a.run.app", "https://matrix-12-fuuw52yj3a-uc.a.run.app", "https://matrix-13-fuuw52yj3a-uc.a.run.app", "https://matrix-14-fuuw52yj3a-uc.a.run.app", "https://matrix-15-fuuw52yj3a-uc.a.run.app", "https://matrix-16-fuuw52yj3a-uc.a.run.app"};
 
-
+    static ArrayList<String> serviceList = new ArrayList<>();
     public static Integer[][] extractArray(Integer[][] src, int xSrc, int ySrc, int n) {
         Integer[][] ret = new Integer[n][n];
         for (int i = 0; i < n; i ++) {
@@ -25,11 +26,16 @@ public class MatrixClient {
     public static void main(String[] args) {
         
         
-        
+        String baseName = "message-passing-";
+
+        for (int i = 1; i <= 16; i ++) {
+            String tmp = "https://" + baseName + i + "-fuuw52yj3a-uc.a.run.app";
+            serviceList.add(tmp);
+        }
             
         try {
-            int n = 1024;
-            int threadN = 4;
+            int n = 256;
+            int threadN = 2;
             Integer[][] a = new Integer[n][n];
             Integer[][]b = new Integer[n][n];
             MatMultiplyThread[][] threads = new MatMultiplyThread[threadN][threadN];
@@ -42,7 +48,7 @@ public class MatrixClient {
             }
 
             int threadSize = n/threadN;
-            
+            int threadCount = 0;        
             for (int i = 0; i < n; i += threadSize) {
                 for ( int j = 0; j < n; j +=threadSize) { //loop through all blocks
                     MatMultiplyThread temp;
@@ -55,7 +61,8 @@ public class MatrixClient {
                         bRows.add(new DockerMatrix(threadSize, subB));
                     }
                     System.out.println("initializing:" + i/threadSize + ", " + j/threadSize);
-                    threads[i/threadSize][j/threadSize] = new MatMultiplyThread(aCols, bRows, threadN);
+                    threads[i/threadSize][j/threadSize] = new MatMultiplyThread(aCols, bRows, threadN, serviceList.get(threadCount));
+                    threadCount ++;
                     
                 }
             }
@@ -104,6 +111,7 @@ public class MatrixClient {
             
             
         } catch (Exception e) {
+            e.printStackTrace(System.out);
             System.out.println(e);
         }
     }

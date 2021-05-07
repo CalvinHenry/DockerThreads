@@ -5,6 +5,7 @@ import os
 
 #gcloud builds submit --tag gcr.io/cs590-308319/gcf-test:v2
 
+runningThread = 2
 #os.system('java -classpath Server SampleClient')
 class S(BaseHTTPRequestHandler):
 	def _set_response(self):
@@ -20,19 +21,27 @@ class S(BaseHTTPRequestHandler):
 		post_data = self.rfile.read(content_length) # <--- Gets the data itself
 		logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",str(self.path), str(self.headers), post_data.decode('utf-8'))
 		data = post_data.decode('utf-8').strip()
-		f = open("input.txt", "w")
-		f.write(data)
-		f.close()
-		
+		stringArray = data.split("\n")
+		command = stringArray[0]
+		data = stringArray[1]
 
-		#proc = subprocess.Popen(["C:/Users/nivl0/.jdks/adopt-openjdk-14.0.2/bin/java", "-classpath", "Server", "Main"], stdout=subprocess.PIPE, shell=True)
-		#os.system('java -classpath Server Main')
-		#proc = subprocess.Popen(["java", "-classpath", "Server", "Main"], stdout=subprocess.PIPE, shell=True)
-		proc = subprocess.Popen(['java -classpath Server Main'], stdout=subprocess.PIPE, shell=True)
-		(out, err) = proc.communicate()
-		out = out.decode()
-		out = out.strip()
-		logging.info(out)
+		if command == "StartThread":
+			f = open("input.txt", "w")
+			f.write(data)
+			f.close()
+			
+
+			#proc = subprocess.Popen(["C:/Users/nivl0/.jdks/adopt-openjdk-14.0.2/bin/java", "-classpath", "Server", "Main"], stdout=subprocess.PIPE, shell=True)
+			#os.system('java -classpath Server Main')
+			#proc = subprocess.Popen(["java", "-classpath", "Server", "Main"], stdout=subprocess.PIPE, shell=True)
+			proc = subprocess.Popen(['java -classpath Server Main'], stdout=subprocess.PIPE, shell=True)
+			
+			(out, err) = proc.communicate()
+			out = out.decode()
+			out = out.strip()
+			logging.info(out)
+		elif command == "Message":
+			
 		#os.system('C:/Users/nivl0/.jdks/adopt-openjdk-14.0.2/bin/java -classpath Server Main')
 		self._set_response()
 		self.wfile.write(out.encode('utf-8'))

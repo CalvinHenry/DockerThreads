@@ -33,17 +33,24 @@ import java.net.InetSocketAddress;
 
 public class DockerThread extends Thread implements Serializable {
 
-    static String [] services = {"https://matrix-1-fuuw52yj3a-uc.a.run.app", "https://matrix-2-fuuw52yj3a-uc.a.run.app", "https://matrix-3-fuuw52yj3a-uc.a.run.app", "https://matrix-5-fuuw52yj3a-uc.a.run.app", "https://matrix-4-fuuw52yj3a-uc.a.run.app", "https://matrix-6-fuuw52yj3a-uc.a.run.app", "https://matrix-7-fuuw52yj3a-uc.a.run.app", "https://matrix-8-fuuw52yj3a-uc.a.run.app", "https://matrix-9-fuuw52yj3a-uc.a.run.app", "https://matrix-10-fuuw52yj3a-uc.a.run.app", "https://matrix-11-fuuw52yj3a-uc.a.run.app", "https://matrix-12-fuuw52yj3a-uc.a.run.app", "https://matrix-13-fuuw52yj3a-uc.a.run.app", "https://matrix-14-fuuw52yj3a-uc.a.run.app", "https://matrix-15-fuuw52yj3a-uc.a.run.app", "https://matrix-16-fuuw52yj3a-uc.a.run.app"};
+    
     static Integer serviceId = 0;
     DockerVar result;
     String myService;
+    
+    
+    public DockerThread(String url) {
+        this.myService = url;
+    }
+
+    public DockerThread() {
+        this("https://instance-version-fuuw52yj3a-uc.a.run.app");
+    }
+    
     @Override
     public void run() {
 
-        synchronized (serviceId) {
-            myService = services[serviceId];
-            serviceId ++;
-        }
+        
         System.out.println("My URL: " + myService);
         //Start Google cloud platform container
         //Connect to it
@@ -58,7 +65,7 @@ public class DockerThread extends Thread implements Serializable {
                     //.uri(URI.create("http://localhost:8080"))
                     .uri(URI.create(myService))
                     //.uri(URI.create("https://instance-version-fuuw52yj3a-uc.a.run.app"))
-                    .POST(HttpRequest.BodyPublishers.ofString(this.serialize()))
+                    .POST(HttpRequest.BodyPublishers.ofString("StartThread\n" +this.serialize()))
                     .build();
 
             HttpResponse<?> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -66,11 +73,31 @@ public class DockerThread extends Thread implements Serializable {
             
             this.result = (DockerVar)buildThread(lresult);
         } catch(Exception e){
+            e.printStackTrace(System.out);
             System.out.println(e);
         }
         
         System.out.println("Got response");
         //this.execute();
+        
+    }
+
+    public void sendVar(DockerVar var, String targetProcessURL) {
+        HttpClient client = HttpClient.newHttpClient();
+        String lresult = "";
+        try {
+            this.sleep(100);
+            HttpRequest request = HttpRequest.newBuilder()
+                    //.uri(URI.create("http://localhost:8080"))
+                    .uri(URI.create(targetProcessURL))
+                    //.uri(URI.create("https://instance-version-fuuw52yj3a-uc.a.run.app"))
+                    .POST(HttpRequest.BodyPublishers.ofString(this.serialize()))
+                    .build();
+
+            HttpResponse<?> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch(Exception e){
+            System.out.println(e);
+        }
         
     }
  
